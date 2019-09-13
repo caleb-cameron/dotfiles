@@ -1,6 +1,8 @@
 let &packpath = &runtimepath
-let g:python_host_prog = '/export/apps/python/2.7/bin/python'
-let g:python3_host_prog = '/export/apps/python/3.7/bin/python3'
+if filereadable("/export/apps/python/2.7/bin/python") " This is a work machine, use the right python.
+        let g:python_host_prog = '/export/apps/python/2.7/bin/python'
+        let g:python3_host_prog = '/export/apps/python/3.7/bin/python3'
+endif
 
 let mapleader = ","
 
