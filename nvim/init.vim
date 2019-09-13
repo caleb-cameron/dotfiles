@@ -51,6 +51,11 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'kaicataldo/material.vim'
 Plug 'rakr/vim-one'
 
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+
+Plug 'vim-scripts/ReplaceWithRegister'
+
 call plug#end()
 
 au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
