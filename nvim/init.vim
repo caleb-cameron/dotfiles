@@ -86,6 +86,13 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'kaicataldo/material.vim'
 Plug 'rakr/vim-one'
 
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+
+Plug 'vim-scripts/ReplaceWithRegister'
+Plug 'HendrikPetertje/vimify'
+
 call plug#end()
 
 " Enable mouse if possible
