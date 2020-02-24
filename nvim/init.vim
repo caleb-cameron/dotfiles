@@ -1,29 +1,48 @@
-let &packpath = &runtimepath
-if filereadable("/export/apps/python/2.7/bin/python") " This is a work machine, use the right python.
-        let g:python_host_prog = '/export/apps/python/2.7/bin/python'
-        let g:python3_host_prog = '/export/apps/python/3.7/bin/python3'
-else
-        let g:python_host_prog = '/usr/bin/python'
-        let g:python3_host_prog = '/usr/bin/python3'
-endif
+syntax on
+colo pablo
 
-let mapleader = ","
+" Flash screen instead of beep sound
+set visualbell
 
-" auto-install vim-plug                                                                                                                
+" Change how vim represents characters on the screen
+set encoding=utf-8
+
+" Set the encoding of files written
+set fileencoding=utf-8
+
+autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd Filetype go setlocal tabstop=4 shiftwidth=4 softtabstop=4
+" ts - show existing tab with 4 spaces width
+" sw - when indenting with '>', use 4 spaces width
+" sts - control <tab> and <bs> keys to match tabstop
+
+" Control all other files
+set shiftwidth=4
+
+set undofile " Maintain undo history between sessions
+set undodir=~/.vim/undodir
+
+" Hardcore mode, disable arrow keys.
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
+" auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))                                                                                    
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim                                                             
   autocmd VimEnter * PlugInstall                                                                                                      
 endif                                                                                                                                 
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'neovim/pynvim'
+Plug 'fatih/vim-go', { 'do': 'GoUpdateBinaries' }
 
-set completeopt+=noselect
+" vim-go configs
+let g:go_fmt_command = "goimports"    " Run goimports along gofmt on each save     
+let g:go_auto_type_info = 1           " Automatically get signature/type info for object under cursor
 
-Plug 'ctrlpvim/ctrlp.vim'          " CtrlP is installed to support tag finding in vim-go
-
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 
 if has('nvim')
     " Enable deoplete on startup
@@ -31,28 +50,18 @@ if has('nvim')
     let g:deoplete#auto_complete=1
 endif
 
-Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete=1
-let g:deoplete#sources#go#gocode_binary = $HOME.'/go/bin/gocode'
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:deoplete#sources#go#source_importer = 1
 
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" Disable preview window
+set completeopt-=preview
+" Close preview window on leaving insertmode
+" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-Plug 'sebdah/vim-delve'
-
-Plug 'bling/vim-airline'
-Plug 'christoomey/vim-sort-motion'
-Plug 'christoomey/vim-system-copy'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'scrooloose/nerdtree'
+" NERDTree configs
+Plug 'preservim/nerdtree'
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -61,23 +70,20 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 " Automatically close NERDTree if the only window left open is NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" toggle NERDTree with ctrl-N
 map <C-n> :NERDTreeToggle<CR>
+
+
+" vim-airline
+Plug 'bling/vim-airline'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Needed to make sebdah/vim-delve work on Vim
-Plug 'Shougo/vimshell.vim'                  " Needed to make sebdah/vim-delve work on Vim
-Plug 'scrooloose/nerdtree'
-
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-
-map <C-n> :NERDTreeToggle<CR>
-
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Color schemes
 Plug 'NLKNguyen/papercolor-theme'
@@ -86,110 +92,7 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'kaicataldo/material.vim'
 Plug 'rakr/vim-one'
 
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-
-Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'HendrikPetertje/vimify'
-
 call plug#end()
-
-" Enable mouse if possible
-if has('mouse')
-    set mouse=a
-endif
-
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-
-" Disable the CtrlP mapping, since we want to use FZF instead for <c-p>.
-let g:ctrlp_map = ''
-
-" https://hackernoon.com/my-neovim-setup-for-go-7f7b6e805876
-au FileType go set noexpandtab
-au FileType go set shiftwidth=4
-au FileType go set softtabstop=4
-au FileType go set tabstop=4
-
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_types = 1
-let g:go_auto_sameids = 1
-
-" Show the progress when running :GoCoverage
-let g:go_echo_command_info = 1
-
-" Show type information
-let g:go_auto_type_info = 1
-let g:go_fmt_command = "goimports"
-
-" Add the failing test name to the output of :GoTest
-let g:go_test_show_name = 1
-
-let g:go_gocode_propose_source=1
-
-" Error and warning signs.
-let g:ale_sign_error = '⤫'
-let g:ale_sign_warning = '⚠'
-
-" Enable integration with airline.
-let g:airline#extensions#ale#enabled = 1
-
-au FileType go nmap <leader>gt :GoDeclsDir<cr>
-
-au Filetype go nmap <leader>ga <Plug>(go-alternate-edit)
-au Filetype go nmap <leader>gah <Plug>(go-alternate-split)
-au Filetype go nmap <leader>gav <Plug>(go-alternate-vertical)
-
-au FileType go nmap <F10> :GoRun<cr>
-au FileType go nmap <F9> :GoCoverageToggle -short<cr>
-
-" Show type information in status line
-let g:go_auto_type_info = 1
-
-" Map go to definition to F12
-au FileType go nmap <F12> <Plug>(go-def)
-
-" Disable deoplete when in multi cursor mode
-function! Multiple_cursors_before()
-    let b:deoplete_disable_auto_complete = 1
-endfunction
-
-function! Multiple_cursors_after()
-    let b:deoplete_disable_auto_complete = 0
-endfunction
-
-" Enable syntax processing
-syntax enable
-
-" Highlight current line
-set cursorline
-
-" Remap arrow keys to do nothing.
-noremap <Up> <nop>
-noremap <Down> <nop>
-noremap <Left> <nop>
-noremap <Right> <nop>
-
-inoremap <Up> <nop>
-inoremap <Down> <nop>
-inoremap <Left> <nop>
-inoremap <Right> <nop>
-
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-
-" Autoload NERDTree when vim starts
-" autocmd vimenter * NERDTree
-
 " Number of visual spaces per tab
 set tabstop=4
 
@@ -225,14 +128,9 @@ set hlsearch
 nnoremap j gj
 nnoremap k gk
 
-" Highlight last inserted text
-nnoremap gV `[v`]
-
 set number
 set relativenumber
 set ruler
-set softtabstop=2
-set tabstop=2
 set title
 set updatetime=100
 set noerrorbells
