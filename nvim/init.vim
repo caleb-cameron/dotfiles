@@ -41,17 +41,8 @@ Plug 'fatih/vim-go', { 'do': 'GoUpdateBinaries' }
 let g:go_fmt_command = "goimports"    " Run goimports along gofmt on each save     
 let g:go_auto_type_info = 1           " Automatically get signature/type info for object under cursor
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
-
-if has('nvim')
-    " Enable deoplete on startup
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#auto_complete=1
-endif
-
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#source_importer = 1
+" Use release branch (Recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
