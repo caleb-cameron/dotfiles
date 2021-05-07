@@ -44,6 +44,14 @@ let g:go_auto_type_info = 1           " Automatically get signature/type info fo
 " Use release branch (Recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+Plug 'sebdah/vim-delve'
+
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " Disable preview window
@@ -63,6 +71,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " toggle NERDTree with ctrl-N
 map <C-n> :NERDTreeToggle<CR>
+
+
+Plug 'google/vim-maktaba' " Required for vim-bazel
+Plug 'bazelbuild/vim-bazel'
 
 
 " vim-airline
@@ -126,6 +138,52 @@ set title
 set updatetime=100
 set noerrorbells
 set novisualbell
+
+"----------------------------------------------
+" Terminal
+"----------------------------------------------
+" Terminal Function
+
+let g:term_buf = 0
+let g:term_win = 0
+function! TermToggle(height)
+    if win_gotoid(g:term_win)
+        hide
+    else
+        botright new
+        exec "resize " . a:height
+        try
+            exec "buffer " . g:term_buf
+        catch
+            call termopen($SHELL, {"detach": 0})
+            let g:term_buf = bufnr("")
+            set nonumber
+            set norelativenumber
+            set signcolumn=no
+        endtry
+        startinsert!
+        let g:term_win = win_getid()
+    endif
+endfunction
+
+" Toggle terminal on/off (neovim)
+nnoremap <A-t> :call TermToggle(12)<CR>
+inoremap <A-t> <Esc>:call TermToggle(12)<CR>
+tnoremap <A-t> <C-\><C-n>:call TermToggle(12)<CR>
+
+" Terminal go back to normal mode
+tnoremap <Esc> <C-\><C-n>
+tnoremap :q! <C-\><C-n>:q!<CR>
+
+" 'cd' towards the directory in which the current file is edited
+" but only change the path for the current window
+nnoremap <leader>cd :lcd %:h<CR>
+"
+" Open files located in the same dir in with the current file is edited
+nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<CR>
+
+
+
 
 "----------------------------------------------
 " Colors
