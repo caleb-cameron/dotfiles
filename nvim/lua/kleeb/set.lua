@@ -6,6 +6,8 @@ vim.opt.visualbell = true
 vim.cmd('colorscheme tender')
 vim.g.airline_theme = 'tender'
 
+vim.opt.number = true
+
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -40,4 +42,5 @@ vim.g.go_fmt_command = "goimports"
 -- vim.api.nvim_create_augroup("NvimTreeToggle", {clear = true })
 -- vim.api.nvim_create_autocmd("VimEnter"
 
-
+-- Yank to clipboard
+vim.opt.clipboard = 'unnamedplus'
