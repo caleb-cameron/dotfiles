@@ -1,6 +1,8 @@
 syntax on
 colo pablo
 
+let mapleader = " "
+
 " Flash screen instead of beep sound
 set visualbell
 
@@ -27,6 +29,13 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+
+" Better tab experience - from https://webdevetc.com/
+map <leader>tn :tabnew<cr>
+map <leader>t<leader> :tabnext<cr>
+" map <leader>tm :tabmove
+map <leader>tc :tabclose<cr>
+map <leader>to :tabonly<cr>
 
 " auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))                                                                                    
@@ -88,12 +97,16 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'christoomey/vim-tmux-navigator'
 
+" Puppet syntax
+Plug 'rodjek/vim-puppet'
+
 " Color schemes
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'altercation/vim-colors-solarized'
 Plug 'ayu-theme/ayu-vim'
 Plug 'kaicataldo/material.vim'
 Plug 'rakr/vim-one'
+Plug 'sainnhe/sonokai'
 
 call plug#end()
 " Number of visual spaces per tab
@@ -131,8 +144,8 @@ set hlsearch
 nnoremap j gj
 nnoremap k gk
 
-set number
-set relativenumber
+" set number
+" set relativenumber
 set ruler
 set title
 set updatetime=100
@@ -211,7 +224,7 @@ let ayucolor = 'dark'
 " One colorscheme settings
 let g:one_allow_italics = 1
 
-colorscheme one
+colorscheme sonokai
 
 " Override the search highlight color with a combination that is easier to
 " read. The default PaperColor is dark green backgroun with black foreground.
@@ -234,6 +247,9 @@ cnoreabbrev WQ wq
 cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
+
+nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 
 
 "----------------------------------------------

@@ -1,0 +1,1 @@
+require("kleeb.go.auto")
